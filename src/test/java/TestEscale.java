@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.text.ParseException;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import model.Adresse;
 import model.Aeroport;
 import model.Escale;
 import model.EscaleKey;
@@ -26,13 +26,13 @@ public class TestEscale {
 
 	@Autowired
 	private EscaleRepository escaleRepository;
-	
+
 	@Autowired
 	private VolRepository volRepository;
-	
+
 	@Autowired
 	private AeroportRepository aeroportRepository;
-	
+
 	private static Aeroport a1;
 	private static Aeroport a2;
 	private static Vol v1;
@@ -67,7 +67,7 @@ public class TestEscale {
 		assertNotNull(e1.getId());
 		assertNotNull(e2.getId());
 	}
-		
+
 	@Test
 	public void findById() {
 		aeroportRepository.save(a1);
@@ -89,7 +89,7 @@ public class TestEscale {
 			assertNotNull(esc2.get());
 		}
 	}
-	
+
 	@Test
 	public void update() {
 		SimpleDateFormat heure = new SimpleDateFormat("HH-mm-ss");
@@ -113,17 +113,55 @@ public class TestEscale {
 			if (esc2.isPresent()) {
 				e2 = esc2.get();
 			}
-			
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
-//		escaleRepository.delete(e2);
-//		e1 = new Escale(new EscaleKey(v1, a2));
-//		escaleRepository.update(e1);
-//		assertNotNull(escaleRepository.findByKey(e1.getId()));
-//		assertNotNull(escaleRepository.findAll());
-//	}
+
+	@Test
+	public void findAll() {
+		assertNotNull(escaleRepository.findAll());
+	}
+
+	@Test
+	public void delete() {
+		SimpleDateFormat heure = new SimpleDateFormat("HH-mm-ss");
+		aeroportRepository.save(a1);
+		aeroportRepository.save(a2);
+		volRepository.save(v1);
+		volRepository.save(v2);
+		Escale e1;
+		try {
+			e1 = new Escale(new EscaleKey(v1, a1), heure.parse("11-25-00"), heure.parse("13-45-00"));
+			Escale e2 = new Escale(new EscaleKey(v2, a2), heure.parse("15-00-00"), heure.parse("16-00-00"));
+			escaleRepository.save(e1);
+			escaleRepository.save(e2);
+			escaleRepository.delete(e2);
+			assertFalse(escaleRepository.findById(e2.getId()).isPresent());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void deleteById() {
+		SimpleDateFormat heure = new SimpleDateFormat("HH-mm-ss");
+		aeroportRepository.save(a1);
+		aeroportRepository.save(a2);
+		volRepository.save(v1);
+		volRepository.save(v2);
+		Escale e1;
+		try {
+			e1 = new Escale(new EscaleKey(v1, a1), heure.parse("11-25-00"), heure.parse("13-45-00"));
+			Escale e2 = new Escale(new EscaleKey(v2, a2), heure.parse("15-00-00"), heure.parse("16-00-00"));
+			escaleRepository.save(e1);
+			escaleRepository.save(e2);
+			escaleRepository.deleteById(e2.getId());
+			assertFalse(escaleRepository.findById(e2.getId()).isPresent());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
