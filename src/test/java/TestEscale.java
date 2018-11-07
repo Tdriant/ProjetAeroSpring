@@ -90,6 +90,34 @@ public class TestEscale {
 		}
 	}
 	
+	@Test
+	public void update() {
+		SimpleDateFormat heure = new SimpleDateFormat("HH-mm-ss");
+		aeroportRepository.save(a1);
+		aeroportRepository.save(a2);
+		volRepository.save(v1);
+		volRepository.save(v2);
+		Escale e1;
+		try {
+			e1 = new Escale(new EscaleKey(v1, a1), heure.parse("11-25-00"), heure.parse("13-45-00"));
+			Escale e2 = new Escale(new EscaleKey(v2, a2), heure.parse("15-00-00"), heure.parse("16-00-00"));
+			escaleRepository.save(e1);
+			escaleRepository.save(e2);
+			assertNotNull(e1.getId());
+			assertNotNull(e2.getId());
+			Optional<Escale> esc1 = escaleRepository.findById(e1.getId());
+			Optional<Escale> esc2 = escaleRepository.findById(e2.getId());
+			if (esc1.isPresent()) {
+				e1 = esc1.get();
+			}
+			if (esc2.isPresent()) {
+				e2 = esc2.get();
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
 //		escaleRepository.delete(e2);
 //		e1 = new Escale(new EscaleKey(v1, a2));
