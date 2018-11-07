@@ -14,8 +14,7 @@ import repositories.VolRepository;
 
 import static org.junit.Assert.*;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
 
 @RunWith(SpringJUnit4ClassRunner.class)
