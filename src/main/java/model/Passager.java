@@ -17,7 +17,8 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "passager")
-@NamedQueries({@NamedQuery(name = "Passager.findByKeyWithReservation" ,query = "select distinct p from Passager p left join fetch p.reservations" )})
+@NamedQueries({@NamedQuery(name = "Passager.findByIdWithReservation" ,query = "select distinct p from Passager p left join fetch p.reservations where p.id =:id" ),
+	@NamedQuery(name = "Passager.findAllWithReservation", query = "select distinct p from Passager p left join fetch p.reservations")})
 
 @SequenceGenerator(name = "seqPassager", sequenceName = "seq_passager", initialValue = 1, allocationSize = 10)
 public class Passager {
