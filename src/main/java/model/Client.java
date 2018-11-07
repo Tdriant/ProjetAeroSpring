@@ -21,7 +21,8 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "client")
-@NamedQueries({@NamedQuery(name = "Client.findByKeyWithReservation" ,query = "select distinct c from Client c left join fetch c.reservations" )})
+@NamedQueries({@NamedQuery(name = "Client.findByIdWithReservation" ,query = "select distinct c from Client c left join fetch c.reservations where c.id =:id " ),
+	@NamedQuery(name = "Client.findAllWithReservation", query = "select distinct c from Client c left join fetch c.reservations")})
 
 @SequenceGenerator(name = "seqClient", sequenceName = "seq_client", initialValue = 1, allocationSize = 10)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
