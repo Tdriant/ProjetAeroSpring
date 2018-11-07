@@ -1,58 +1,73 @@
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import java.util.Optional;
 
-import dao.DaoAeroport;
-import dao.DaoAeroportFactory;
-import dao.DaoVille;
-import dao.DaoVilleAeroport;
-import dao.DaoVilleAeroportFactory;
-import dao.DaoVilleFactory;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import model.Aeroport;
 import model.Ville;
 import model.VilleAeroport;
 import model.VilleAeroportKey;
-import util.Context;
+import repositories.AeroportRepository;
+import repositories.VilleAeroportRepository;
+import repositories.VilleRepository;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/applicationcontext.xml" })
 public class VilleAeroportTestSimple {
 
-	private static DaoVilleAeroport daoVilleAeroport;
-	private static DaoVille daoVille;
-	private static DaoAeroport daoAeroport;
+	@Autowired
+	private VilleAeroportRepository villeAeroportRepository;
+	@Autowired
+	private VilleRepository villeRepository;
+	@Autowired
+	private AeroportRepository aeroportRepository;
 
-	@BeforeClass
-	public static void initDaoVilleAeroport() {
-
-		daoVilleAeroport = DaoVilleAeroportFactory.getInstance();
-		daoVille = DaoVilleFactory.getInstance();
-		daoAeroport = DaoAeroportFactory.getInstance();
-
-	}
-
-	@AfterClass
-	public static void fermeturJpa() {
-
-		Context.destroy();
-
+	@Test
+	public void testJointureVilleAeroport() {// test équivalent au insert
+		Ville v = new Ville();
+		v.setNom("paris");
+		villeRepository.save(v);
+		Aeroport a = new Aeroport("cdg");
+		aeroportRepository.save(a);
+		VilleAeroport villeAeroport = new VilleAeroport();
+		villeAeroport.setKey(new VilleAeroportKey(v, a));
+		villeAeroportRepository.save(villeAeroport);
+		assertNotNull(villeAeroportRepository.findById(villeAeroport.getKey()));
 	}
 
 	@Test
-	public void testJointureVilleAeroport() {
+	public void findById() {
 		Ville v = new Ville();
 		v.setNom("paris");
-		daoVille.create(v);
+		villeRepository.save(v);
 		Aeroport a = new Aeroport("cdg");
-		daoAeroport.create(a);
-
-		VilleAeroport villeAeroport = new VilleAeroport();
-		villeAeroport.setKey(new VilleAeroportKey(v, a));
-
-		daoVilleAeroport.create(villeAeroport);
-
-		assertNotNull(daoVilleAeroport.findByKey(villeAeroport.getKey()));
+		aeroportRepository.save(a);
+		VilleAeroport t = new VilleAeroport(new VilleAeroportKey(v, a));
+		villeAeroportRepository.save(t);
+		assertNotNull(villeAeroportRepository.findById(t.getKey()));
+		Optional<VilleAeroport> vil = villeAeroportRepository.findById(t.getKey());
+		if (vil.isPresent()) {
+			assertNotNull(vil.get());
+		}
 	}
-	
+
+	@Test
+	public void delete() {
+		Ville v = new Ville();
+		v.setNom("paris");
+		villeRepository.save(v);
+		Aeroport a = new Aeroport("cdg");
+		aeroportRepository.save(a);
+		VilleAeroport t = new VilleAeroport(new VilleAeroportKey(v, a));
+		villeAeroportRepository.save(t);
+		villeAeroportRepository.delete(t);
+		assertFalse(villeAeroportRepository.findById(t.getKey()).isPresent());
+	}
 
 }
