@@ -27,7 +27,12 @@ public class TestVol {
 	@Test
 	public void tryVol() {
 	SimpleDateFormat date = new SimpleDateFormat("DD/MM/YYYY");
-	Vol bouwa = new Vol();try
+	Vol bouwa = new Vol();
+	Vol bouwi = new Vol();
+	Vol Baboum = new Vol();
+	
+	
+	try
 	{
 		bouwa.setDateDepart(date.parse("12/12/1998"));
 		bouwa.setDateArrivee(date.parse("12/12/1998"));
