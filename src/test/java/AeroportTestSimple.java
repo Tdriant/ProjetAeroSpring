@@ -1,122 +1,90 @@
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import java.util.Optional;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import dao.DaoAeroport;
-import dao.DaoAeroportFactory;
 import model.Aeroport;
-import util.Context;
+import repositories.AeroportRepository;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/applicationcontext.xml" })
 public class AeroportTestSimple {
 
-	private static DaoAeroport daoAeroport;
+	@Autowired
+	private AeroportRepository aeroportRepository;
 
-	@BeforeClass
-	public static void initDaoAeroport() {
-
-		daoAeroport = DaoAeroportFactory.getInstance();
-
-	}
-
-	@AfterClass
-	public static void fermeturJpa() {
-
-		Context.destroy();
-
+	@Test
+	public void repo() {
+		assertNotNull(aeroportRepository);
 	}
 
 	@Test
 	public void insert() {
-
 		Aeroport cdg;
-
 		cdg = new Aeroport("cdg");
-
 		assertNull(cdg.getId());
-
-		daoAeroport.create(cdg);
-
+		aeroportRepository.save(cdg);
 		assertNotNull(cdg.getId());
-
 	}
 
 	@Test
-
-	public void findByKey() {
-
+	public void findById() {
 		Aeroport cdg;
-
 		cdg = new Aeroport("cdg");
-
-		daoAeroport.create(cdg);
-
-		assertNotNull(daoAeroport.findByKey(cdg.getId()));
-
+		aeroportRepository.save(cdg);
+		assertNotNull(aeroportRepository.findById(cdg.getId()));
+		Optional<Aeroport> aer = aeroportRepository.findById(cdg.getId());
+		if (aer.isPresent()) {
+			assertNotNull(aer.get());
+		}
 	}
 
 	@Test
-
 	public void update() {
-
 		Aeroport orly;
-
 		orly = new Aeroport("orly");
-
-		daoAeroport.create(orly);
-
-		orly = daoAeroport.findByKey(orly.getId());
-
+		aeroportRepository.save(orly);
+		Optional<Aeroport> aer = aeroportRepository.findById(orly.getId());
+		if (aer.isPresent()) {
+			orly = aer.get();
+		}
 		orly.setNom("orly");
-
-		daoAeroport.update(orly);
-
-		assertEquals("orly", daoAeroport.findByKey(orly.getId()).getNom());
-
+		aeroportRepository.save(orly);
+		if (aer.isPresent()) {
+			assertEquals("orly", aer.get().getNom());
+		}
 	}
 
 	@Test
-
 	public void findAll() {
-
-		assertNotNull(daoAeroport.findAll());
-
+		assertNotNull(aeroportRepository.findAll());
 	}
 
 	@Test
-
 	public void delete() {
-
 		Aeroport cdg;
-
 		cdg = new Aeroport("cdg");
-
-		daoAeroport.create(cdg);
-
-		daoAeroport.delete(cdg);
-
-		assertNull(daoAeroport.findByKey(cdg.getId()));
-
+		aeroportRepository.save(cdg);
+		aeroportRepository.delete(cdg);
+		assertFalse(aeroportRepository.findById(cdg.getId()).isPresent());
 	}
 
 	@Test
-
-	public void deleteByKey() {
-
+	public void deleteById() {
 		Aeroport cdg;
-
 		cdg = new Aeroport("cdg");
-
-		daoAeroport.create(cdg);
-
-		daoAeroport.deleteByKey(cdg.getId());
-
-		assertNull(daoAeroport.findByKey(cdg.getId()));
-
+		aeroportRepository.save(cdg);
+		aeroportRepository.deleteById(cdg.getId());
+		assertFalse(aeroportRepository.findById(cdg.getId()).isPresent());
 	}
 
 }
