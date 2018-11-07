@@ -10,12 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-<<<<<<< HEAD
+
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-=======
+
 import javax.persistence.ManyToOne;
->>>>>>> master
+
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -25,10 +25,9 @@ import javax.persistence.Version;
 
 @Entity
 @NamedQueries({ // Requetes SQL préparées
-	@NamedQuery(name = "Vol.findByIdWithReservations" ,query = "select distinct v from Vol v left join fetch v.reservations where v.id =:id " ),
+	@NamedQuery(name = "Vol.findReservationByVolId" ,query = "select distinct r from Vol v left join v.reservations r where v.id =:id " ),
 	@NamedQuery(name = "Vol.findAllWithReservation", query = "select distinct v from Vol v left join fetch v.reservations"),
-	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id"),
-	@NamedQuery(name="Vol.findByIdCA")
+	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id")
 	})
 @SequenceGenerator(name = "seqVol", sequenceName = "seq_vol", initialValue = 50, allocationSize = 1)
 public class Vol {
@@ -151,7 +150,14 @@ public class Vol {
 	public void setAeroportArrivee(Aeroport aeroportArrivee) {
 		this.aeroportArrivee = aeroportArrivee;
 	}
-
+	public void addReservation(Reservation reservation) {
+		this.reservations.add(reservation);
+	}
+	public void deleteReservation(Reservation reservation) {
+		this.reservations.remove(reservation);
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -190,6 +196,17 @@ public class Vol {
 		this.dateArrivee = dateArrivee;
 		this.heureDepart = heureDepart;
 		this.heureArrivee = heureDepart;
+	}
+
+	public Vol(Date dateDepart, Date dateArrivee, Date heureDepart, Date heureArrivee, Aeroport aeroportDepart,
+			Aeroport aeroportArrivee) {
+		super();
+		this.dateDepart = dateDepart;
+		this.dateArrivee = dateArrivee;
+		this.heureDepart = heureDepart;
+		this.heureArrivee = heureArrivee;
+		this.aeroportDepart = aeroportDepart;
+		this.aeroportArrivee = aeroportArrivee;
 	}
 
 	

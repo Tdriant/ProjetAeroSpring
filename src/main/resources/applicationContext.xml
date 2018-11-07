@@ -18,7 +18,7 @@
 	<context:annotation-config></context:annotation-config>
 
 	<context:component-scan
-		base-package="model"></context:component-scan>
+		base-package="model, services"></context:component-scan>
 
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource">

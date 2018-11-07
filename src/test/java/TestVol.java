@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import model.Reservation;
 import model.Vol;
 import repositories.VolRepository;
 
@@ -46,6 +47,7 @@ public class TestVol {
 			assertNotNull(volRepo.findAll());
 			assertNotNull(volRepo.findById(Baboum.getId()));
 			List<Vol> opt1 = volRepo.findAllWithReservation();
+			Optional<Reservation> opt2= volRepo.findReservationByVolId(51);
 			Optional<Vol> optt = volRepo.findById(bouwa.getId());
 			System.out.println(opt1);
 			assertFalse(optt.isPresent());

@@ -1,10 +1,14 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import model.Reservation;
 import model.Aeroport;
 import model.Vol;
 import repositories.AeroportRepository;
@@ -17,10 +21,12 @@ public class VolService {
 	@Autowired
 	private VolRepository volRepo;
 
+	private Vol vol;
 	@Autowired
 	private AeroportRepository aeroRepo;
 	@Autowired
 	private ReservationRepository resaRepo;
+
 	// Quels services désire t on ?
 
 	// Liste de réservations pour un vol (# named query appelée en méthode)
@@ -33,18 +39,21 @@ public class VolService {
 
 	public void createVol(Date dateDepart, Date dateArrivee, Date HeureDepart, Date Heurearrivee, Aeroport LieuDepart,
 			Aeroport LieuArrivee) {
+
 		for (Aeroport a : aeroRepo.findAll()) {
 			if (a == LieuDepart) {
 				for (Aeroport ae : aeroRepo.findAll()) {
 					if (ae == LieuArrivee) {
 						if (HeureDepart.before(Heurearrivee)) {
 							if (dateDepart.before(dateArrivee) || dateDepart.equals(dateArrivee)) {
-								Vol vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee);
+								 vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee, LieuDepart,
+										LieuArrivee);
 								volRepo.save(vol);
 								System.out.println("Votre vol a été créé et enregistré");
 							}
 						} else if (dateDepart.before(dateArrivee)) {
-							Vol vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee);
+							 vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee, LieuDepart,
+									LieuArrivee);
 							volRepo.save(vol);
 							System.out.println("Votre vol a été créé et enregistré");
 						} else {
@@ -55,5 +64,19 @@ public class VolService {
 			}
 		}
 	}
-	public List<Reservation> getResa()
+
+	public Optional<Reservation> getResa(Integer volId) {
+		Optional<Reservation> resas = volRepo.findReservationByVolId(volId);
+		return resas;
+	}
+
+	public void addReservation(Reservation reservation) {
+		for (Reservation r : resaRepo.findAll()) {
+			if (r == reservation) {
+				vol.addReservation(reservation);
+				volRepo.save(vol);
+				System.out.println("Reservation validée et ajoutée ! Bon vol.");
+			}
+		}
+	}
 }
