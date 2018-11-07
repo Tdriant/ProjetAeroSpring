@@ -56,22 +56,28 @@ public class TestsCaVol {
 			CompagnieAerienneVol cav1 = new CompagnieAerienneVol(new CompagnieAerienneVolKey(ca1, v1));
 			CompagnieAerienneVol cav2 = new CompagnieAerienneVol(new CompagnieAerienneVolKey(ca1, v1));
 			CompagnieAerienneVol cav3 = new CompagnieAerienneVol(new CompagnieAerienneVolKey(ca1, v2));
+			CompagnieAerienneVol cav4 = new CompagnieAerienneVol(new CompagnieAerienneVolKey(ca2, v2));
+			CaVolRepo.save(cav4);
 			CaVolRepo.save(cav1);
 			CaVolRepo.save(cav2);
 			CaVolRepo.save(cav3);
-
+			
 			assertNotNull(v1.getId());
 			assertNotNull(v2.getId());
 			assertNotNull(ca1.getId());
 			assertNotNull(ca2.getId());
+			assertNotNull(cav4.getKey());
 			assertNotNull(cav1.getKey());
 			assertNotNull(cav2.getKey());
 			assertNotNull(cav3.getKey());
 			assertNotNull(CaVolRepo.findById(cav1.getKey()));
 			System.out.println(CaVolRepo.findAll());
 			CaVolRepo.deleteById(cav1.getKey());
+			CaVolRepo.delete(cav4);
+			Optional<CompagnieAerienneVol> opt = CaVolRepo.findById(cav4.getKey());
 			Optional<CompagnieAerienneVol> optt = CaVolRepo.findById(cav1.getKey());
 			assertFalse(optt.isPresent());
+			assertFalse(opt.isPresent());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
