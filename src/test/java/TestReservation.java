@@ -1,37 +1,39 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import dao.DaoReservation;
-import dao.DaoReservationFactory;
 import model.Reservation;
-import util.Context;
+import repositories.ReservationRepository;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/applicationcontext.xml" })
 public class TestReservation {
 
-	private static DaoReservation daoreservation;
+	@Autowired
+	private ReservationRepository reservationRepository;
 
-	@BeforeClass
-	public static void initDaoRealisateur() {
-		daoreservation = DaoReservationFactory.getInstance();
+	@Test
+	public void repo() {
+		assertNotNull(reservationRepository);
 	}
-
-	@AfterClass
-	public static void fermeturJpa() {
-		Context.destroy();
-	}
-
+	
 	@Test
 	public void insert() {
 		Reservation a1;
 		a1 = new Reservation();
 		assertNull(a1.getId());
-		daoreservation.create(a1);
+		reservationRepository.save(a1);
 		assertNotNull(a1.getId());
 	}
 
@@ -39,41 +41,57 @@ public class TestReservation {
 	public void findByKey() {
 		Reservation a2;
 		a2 = new Reservation();
-		daoreservation.create(a2);
-		assertNotNull(daoreservation.findByKey(a2.getId()));
+		reservationRepository.save(a2);
+		assertNotNull(reservationRepository.findById(a2.getId()));
+		Optional<Reservation> res = reservationRepository.findById(a2.getId());
+		if (res.isPresent()) {
+			assertNotNull(res.get());
+		}
 	}
 
 	@Test
 	public void update() {
 		Reservation a3;
+		SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
 		a3 = new Reservation();
-		daoreservation.create(a3);
-		a3 = daoreservation.findByKey(a3.getId());
-		daoreservation.update(a3);
+		reservationRepository.save(a3);
+		Optional<Reservation> res = reservationRepository.findById(a3.getId());
+		if (res.isPresent()) {
+			a3 = res.get();
+		}
+		try {
+			a3.setDate(sdf.parse("15/05/2018"));
+			reservationRepository.save(a3);
+			res = reservationRepository.findById(a3.getId());
+			if (res.isPresent()) {
+				assertEquals(sdf.parse("15/05/2018"), res.get().getDate());
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void findAll() {
-		assertNotNull(daoreservation.findAll());
+		assertNotNull(reservationRepository.findAll());
 	}
 
 	@Test
 	public void delete() {
 		Reservation a4;
 		a4 = new Reservation();
-		daoreservation.create(a4);
-		daoreservation.delete(a4);
-		assertNull(daoreservation.findByKey(a4.getId()));
+		reservationRepository.save(a4);
+		reservationRepository.delete(a4);
+		assertFalse(reservationRepository.findById(a4.getId()).isPresent());
 	}
 
 	@Test
 	public void deleteByKey() {
 		Reservation a5;
 		a5 = new Reservation();
-		daoreservation.create(a5);
-		daoreservation.create(a5);
-		daoreservation.deleteByKey(a5.getId());
-		assertNull(daoreservation.findByKey(a5.getId()));
-
+		reservationRepository.save(a5);
+		reservationRepository.save(a5);
+		reservationRepository.deleteById(a5.getId());
+		assertFalse(reservationRepository.findById(a5.getId()).isPresent());
 	}
 }
