@@ -1,19 +1,16 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Optional;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
 import model.CompagnieAerienne;
 import repositories.CompagnieAerienneRepository;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/applicationcontext.xml" })
 public class TestCompagnieAerienne {
@@ -39,8 +36,6 @@ public class TestCompagnieAerienne {
 		System.out.println(caRepo.findAll());
 		System.out.println(caRepo.findById(ca4.getId()));
 		assertNotNull(caRepo.findById(ca4.getId()));
-
-		Optional<CompagnieAerienne> opt = caRepo.findById(ca4.getId());
 		Optional<CompagnieAerienne> optt = caRepo.findById(ca3.getId());
 		assertFalse(optt.isPresent());
 		
