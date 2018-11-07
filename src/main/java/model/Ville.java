@@ -19,7 +19,7 @@ import javax.persistence.Version;
 @Table(name = "villes")
 @NamedQueries({
 @NamedQuery(name = "Ville.findAllWithAeroport", query = "select distinct v from Ville v left join fetch v.villesAeroport va left join fetch va.key.aeroport"),
-@NamedQuery(name = "Ville.findByKeyWithAeroport", query = "select distinct v from Ville v left join fetch v.villesAeroport va left join fetch va.key.aeroport where v.id = :id"),
+@NamedQuery(name = "Ville.findByIdWithAeroport", query = "select distinct v from Ville v left join fetch v.villesAeroport va left join fetch va.key.aeroport where v.id = :id"),
 })
 @SequenceGenerator(name = "seqVille", sequenceName = "seq_ville", initialValue = 50, allocationSize = 1)
 public class Ville {
