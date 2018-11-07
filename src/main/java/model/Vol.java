@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -41,6 +43,12 @@ public class Vol {
 	private List<Reservation> reservations = new ArrayList<>();
 	@OneToMany(mappedBy= "id.vol")
 	private List<Escale> escales = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "id_aeroport_depart")
+	private Aeroport aeroportDepart;
+	@ManyToOne
+	@JoinColumn(name = "id_aeroport_arrivee")
+	private Aeroport aeroportArrivee;
 	@Version
 	private Integer version;
 
@@ -114,6 +122,22 @@ public class Vol {
 
 	public void setEscales(List<Escale> escales) {
 		this.escales = escales;
+	}
+	
+	public Aeroport getAeroportDepart() {
+		return aeroportDepart;
+	}
+
+	public Aeroport getAeroportArrivee() {
+		return aeroportArrivee;
+	}
+
+	public void setAeroportDepart(Aeroport aeroportDepart) {
+		this.aeroportDepart = aeroportDepart;
+	}
+
+	public void setAeroportArrivee(Aeroport aeroportArrivee) {
+		this.aeroportArrivee = aeroportArrivee;
 	}
 
 	@Override
