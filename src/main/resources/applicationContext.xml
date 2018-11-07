@@ -18,7 +18,7 @@
 	<context:annotation-config></context:annotation-config>
 
 	<context:component-scan
-		base-package="projetJpaSpring.dao"></context:component-scan>
+		base-package="model"></context:component-scan>
 
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource">
@@ -33,7 +33,7 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="packagesToScan" value="ProjetJpaSpring.model"></property>
+		<property name="packagesToScan" value="model"></property>
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -63,6 +63,6 @@
 	</bean>
 
 	<jpa:repositories
-		base-package="projetJpaSpring.repositories"></jpa:repositories>
+		base-package="repositories"></jpa:repositories>
 
 </beans>
