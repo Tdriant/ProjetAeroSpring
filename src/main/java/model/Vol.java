@@ -9,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +23,8 @@ import javax.persistence.Version;
 @NamedQueries({ // Requetes SQL préparées
 	@NamedQuery(name = "Vol.findByIdWithReservations" ,query = "select distinct v from Vol v left join fetch v.reservations where v.id =:id " ),
 	@NamedQuery(name = "Vol.findAllWithReservation", query = "select distinct v from Vol v left join fetch v.reservations"),
-	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id")
+	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id"),
+	@NamedQuery(name="Vol.findByIdCA")
 	})
 @SequenceGenerator(name = "seqVol", sequenceName = "seq_vol", initialValue = 50, allocationSize = 1)
 public class Vol {
@@ -50,7 +53,7 @@ public class Vol {
 	private List<Escale> escales = new ArrayList<>();
 	@Version
 	private Integer version;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -162,6 +165,8 @@ public class Vol {
 		this.heureDepart = heureDepart;
 		this.heureArrivee = heureDepart;
 	}
+
+	
 
 //	@Transient
 ////	private List<Escale> escales=new ArrayList <>();
