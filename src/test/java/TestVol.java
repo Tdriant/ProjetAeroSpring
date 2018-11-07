@@ -45,7 +45,6 @@ public class TestVol {
 			volRepo.deleteById(bouwa.getId());
 			assertNotNull(volRepo.findAll());
 			assertNotNull(volRepo.findById(Baboum.getId()));
-
 			List<Vol> opt1 = volRepo.findAllWithReservation();
 			Optional<Vol> optt = volRepo.findById(bouwa.getId());
 			System.out.println(opt1);
