@@ -74,7 +74,7 @@ public class villeTestSimple {
 	public void delete() {
 		Ville paris;
 		paris = new Ville("paris");
-		villeRepository.save(paris);
+		villeRepository.save(pa
 		villeRepository.delete(paris);
 		assertFalse(villeRepository.findById(paris.getId()).isPresent());
 	}
