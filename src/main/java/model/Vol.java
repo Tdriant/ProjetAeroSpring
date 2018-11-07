@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -18,6 +20,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 @Entity
+@NamedQueries({ // Requetes SQL préparées
+	@NamedQuery(name = "Vol.findByIdWithReservations" ,query = "select distinct v from Vol v left join fetch v.reservations where v.id =:id " ),
+	@NamedQuery(name = "Vol.findAllWithReservation", query = "select distinct v from Vol v left join fetch v.reservations"),
+	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id")
+	})
 @SequenceGenerator(name = "seqVol", sequenceName = "seq_vol", initialValue = 50, allocationSize = 1)
 public class Vol {
 
