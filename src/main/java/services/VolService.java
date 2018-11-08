@@ -37,46 +37,54 @@ public class VolService {
 	// départ/arrivée, heure/date départ/arrivée
 	// création de vol # Classique
 
-	public void createVol(Date dateDepart, Date dateArrivee, Date HeureDepart, Date Heurearrivee, Aeroport LieuDepart,
-			Aeroport LieuArrivee) {
+	public void createVol(Vol vol) {
 
-		for (Aeroport a : aeroRepo.findAll()) {
-			if (a == LieuDepart) {
-				for (Aeroport ae : aeroRepo.findAll()) {
-					if (ae == LieuArrivee) {
-						if (HeureDepart.before(Heurearrivee)) {
-							if (dateDepart.before(dateArrivee) || dateDepart.equals(dateArrivee)) {
-								 vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee, LieuDepart,
-										LieuArrivee);
-								volRepo.save(vol);
-								System.out.println("Votre vol a été créé et enregistré");
-							}
-						} else if (dateDepart.before(dateArrivee)) {
-							 vol = new Vol(dateDepart, dateArrivee, HeureDepart, Heurearrivee, LieuDepart,
-									LieuArrivee);
-							volRepo.save(vol);
-							System.out.println("Votre vol a été créé et enregistré");
-						} else {
-							System.out.print("Votre vol n'est pas valide");
-						}
-					}
-				}
-			}
-		}
-	}
+        Optional<Aeroport> aer = aeroRepo.findById(vol.getAeroportDepart().getId());
+        Optional<Aeroport> aere = aeroRepo.findById(vol.getAeroportArrivee().getId());
+        if (aer.isPresent() && aere.isPresent()) {
+            if (vol.getHeureDepart().before(vol.getHeureArrivee())) {
+                if (vol.getDateDepart().before(vol.getDateArrivee())
+                        || vol.getDateDepart().equals(vol.getDateArrivee())) {
+                    volRepo.save(vol);
+                }
+            } else if (vol.getDateDepart().before(vol.getDateArrivee())) {
+                volRepo.save(vol);
+            } else {
+                System.out.print("Votre vol n'est pas valide");
+            }
+        }
+    }
 
-	public Optional<Reservation> getResa(Integer volId) {
-		Optional<Reservation> resas = volRepo.findReservationByVolId(volId);
-		return resas;
-	}
 
-	public void addReservation(Reservation reservation) {
-		for (Reservation r : resaRepo.findAll()) {
-			if (r == reservation) {
-				vol.addReservation(reservation);
-				volRepo.save(vol);
-				System.out.println("Reservation validée et ajoutée ! Bon vol.");
-			}
-		}
-	}
+    public void deleteVolById(Integer id) {
+        Optional<Vol> aer = volRepo.findById(vol.getId());
+        if (aer.isPresent()) {
+            for (Reservation r : vol.getReservations()) {
+                Optional<Reservation> aero = resaRepo.findById(r.getId());
+                if (aero.isPresent()) {
+                    resaRepo.delete(r);
+                }
+            }
+            volRepo.delete(vol);
+        }
+    }
+
+    public void deleteVol(Vol vol) {
+        deleteVolById(vol.getId());
+    }
+
+    public Optional<Reservation> getReservations(Integer volId) {
+        Optional<Reservation> resas = volRepo.findReservationByVolId(volId);
+        return resas;
+    }
+
+    public void addReservation(Reservation reservation, Vol vol) {
+
+        Optional<Reservation> aer = resaRepo.findById(reservation.getId());
+        if (aer.isPresent()) {
+            vol.addReservation(reservation);
+            volRepo.save(vol);
+            System.out.println("Reservation validée et ajoutée ! Bon vol.");
+        }
+    }
 }
