@@ -27,8 +27,9 @@ import javax.persistence.Version;
 @NamedQueries({ // Requetes SQL préparées
 	@NamedQuery(name = "Vol.findReservationByVolId" ,query = "select distinct r from Vol v left join v.reservations r where v.id =:id " ),
 	@NamedQuery(name = "Vol.findAllWithReservation", query = "select distinct v from Vol v left join fetch v.reservations"),
-	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id")
-	})
+	@NamedQuery(name="Vol.findByKeyWithEscales", query="select distinct v from Vol v left join fetch v.escales where v.id=:id"),
+	@NamedQuery(name="Vol.findByIdWithReservation", query="select distinct v from Vol v left join fetch v.reservations r where v.id=:id" )	
+})
 @SequenceGenerator(name = "seqVol", sequenceName = "seq_vol", initialValue = 50, allocationSize = 1)
 public class Vol {
 

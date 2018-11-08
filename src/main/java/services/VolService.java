@@ -56,19 +56,30 @@ public class VolService {
     }
 
 
-    public void deleteVolById(Integer id) {
-        Optional<Vol> aer = volRepo.findById(vol.getId());
-        if (aer.isPresent()) {
-            for (Reservation r : vol.getReservations()) {
-                Optional<Reservation> aero = resaRepo.findById(r.getId());
-                if (aero.isPresent()) {
-                    resaRepo.delete(r);
-                }
-            }
-            volRepo.delete(vol);
-        }
-    }
+//    public void deleteVolById(Integer id) {
+//        Optional<Vol> aer = volRepo.findById(vol.getId());
+//        if (aer.isPresent()) {
+//            for (Reservation r : vol.getReservations()) {
+//                Optional<Reservation> aero = resaRepo.findById(r.getId());
+//                if (aero.isPresent()) {
+//                    resaRepo.delete(r);
+//                }
+//            }
+//            volRepo.delete(vol);
+//        }
+//    }
 
+    
+    public void deleteVolById(Integer id) {
+    	Optional<Vol> ero = volRepo.findByIdWithReservation(id);
+    	if(ero.isPresent()) {
+    		for(Reservation r : ero.get().getReservations()) {
+    			resaRepo.delete(r);
+    		}
+    		volRepo.delete(ero.get());
+    	}
+    }
+    
     public void deleteVol(Vol vol) {
         deleteVolById(vol.getId());
     }

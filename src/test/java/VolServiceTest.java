@@ -55,6 +55,7 @@ public class VolServiceTest {
 			volRepo.save(vol);
 			volService.addReservation(a1, vol);
 			volService.getReservations(50);
+			volService.deleteVolById(50);
 
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -12,7 +12,8 @@ import model.Vol;
 public interface VolRepository extends JpaRepository<Vol, Integer>{
 	
 	Optional<Reservation> findReservationByVolId(@Param("id") Integer id);
+	Optional <Vol> findByIdWithReservation(@Param("id") Integer id);
 	List<Vol> findAllWithReservation();
 	Optional<Vol> findByKeyWithEscales(@Param("id") Integer id);
-	
+
 }
