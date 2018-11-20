@@ -8,7 +8,7 @@ import java.util.List;
 import model.Aeroport;
 import model.Vol;
 
-public class AeroportService {
+public class AeroportServices {
 //	public List<Vol> listerVolDepartsADate(String date, Aeroport aeroport){
 //		SimpleDateFormat f1 = new SimpleDateFormat("DD/MM/YYYY");
 //		SimpleDateFormat f2 = new SimpleDateFormat("DD/MM/YY");
